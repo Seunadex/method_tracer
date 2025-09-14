@@ -40,9 +40,7 @@ module MethodTracer
   #   MyService.trace_methods(:call, threshold: 0.005, auto_output: true)
   module ClassMethods
     def trace_methods(*method_names, **options)
-      puts "🔍 Tracing methods: #{method_names.join(", ")} in #{self}"
       tracer = SimpleTracer.new(self, **options)
-      puts tracer.inspect
       method_names.each do |method_name|
         tracer.trace_method(method_name)
       end

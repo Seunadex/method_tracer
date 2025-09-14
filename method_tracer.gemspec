@@ -36,6 +36,9 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
   spec.add_development_dependency "pry", "~> 0.14.0"
+  spec.add_development_dependency "rubocop-rake", "~> 0.7.1"
+  spec.add_development_dependency "rubocop-rspec", "~> 3.7.0"
+  spec.add_dependency "logger"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
