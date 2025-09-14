@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "set"
-require "mutex_m"
-require "pry"
 
 module MethodTracer
   # SimpleTracer wraps instance methods on a target class and records
@@ -23,7 +21,7 @@ module MethodTracer
       @target_class = target_class
       @options = default_options.merge(options)
       @calls = []
-      @lock  = Mutex.new
+      @lock  = Mutex.new # Mutex to make writes to @calls thread safe.
       @wrapped_methods = Set.new
     end
 
@@ -34,14 +32,15 @@ module MethodTracer
       return unless mark_wrapped(method_name)
 
       aliased = alias_for(method_name)
-      @target_class.send(:alias_method, aliased, method_name)
+      @target_class.send(:alias_method, aliased, method_name) # Aliases original implementation to our private name.
 
       tracer = self
-      key = reentrancy_key
+      key = :__method_tracer_in_trace # local key to avoid recursive tracing.
 
+      # Defines a new method with the original name that delegates to our wrapper.
       @target_class.define_method(method_name, &build_wrapper(aliased, method_name, key, tracer))
 
-      @target_class.send(visibility, method_name)
+      @target_class.send(visibility, method_name) # Restores the original visibility after redefine.
     end
 
     def record_call(method_name, execution_time, status, error = nil)
@@ -55,14 +54,15 @@ module MethodTracer
         timestamp: Time.now
       }
 
-      @lock.synchronize { @calls << call_details }
+      @lock.synchronize { @calls << call_details } # Thread safe append to shared results array.
 
       output_call(call_details) if @options[:auto_output]
+      # Simpler: consider injecting a Logger so callers choose stdout, file, or discard.
     end
 
     def fetch_results
       snapshot = nil
-      @lock.synchronize { snapshot = @calls.dup }
+      @lock.synchronize { snapshot = @calls.dup } # Copies under lock to prevent races while reading.
 
       {
         total_calls: snapshot.size,
@@ -88,6 +88,7 @@ module MethodTracer
       nil
     end
 
+    # Marks a method as wrapped to avoid duplicates.
     def mark_wrapped(method_name)
       return false if @wrapped_methods.include?(method_name)
 
@@ -99,16 +100,13 @@ module MethodTracer
       "__method_tracer_original_#{method_name}__".to_sym
     end
 
-    def reentrancy_key
-      :__method_tracer_in_trace
-    end
-
     def build_wrapper(aliased, method_name, key, tracer)
-      proc do |*args, **kwargs, &block|
-        tracer.__send__(:wrap_call, method_name, key) do
-          __send__(aliased, *args, **kwargs, &block)
+      proc do |*args, **kwargs, &block|                                # Captures args and block exactly like original.
+        tracer.__send__(:wrap_call, method_name, key) do               # Delegates to wrapper to handle timing and flag.
+          __send__(aliased, *args, **kwargs, &block)                   # Calls the original aliased implementation.
         end
       end
+      # Simpler: define the wrapper inline with `define_method` and a block, but extracting helps testability.
     end
 
     def wrap_call(method_name, key)
@@ -137,6 +135,7 @@ module MethodTracer
       status_str = call[:status] == :error ? "[ERROR]" : ""
       puts "TRACE: #{call[:method_name]} #{status_str} took #{time_str}"
       puts "       Error: #{call[:error].class}: #{call[:error].message}" if call[:error]
+      # Simpler: use `warn` for errors or use Logger with levels for production use.
     end
 
     def format_time(seconds)
