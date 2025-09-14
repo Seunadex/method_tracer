@@ -1,3 +1,5 @@
+[![Ruby](https://github.com/Seunadex/method_tracer/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Seunadex/method_tracer/actions/workflows/main.yml)
+
 # MethodTracer
 
 TODO: Delete this and the text below, and describe your gem
