@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "set"
+require "logger"
 
 module MethodTracer
   # SimpleTracer wraps instance methods on a target class and records
@@ -23,6 +24,7 @@ module MethodTracer
       @calls = []
       @lock  = Mutex.new # Mutex to make writes to @calls thread safe.
       @wrapped_methods = Set.new
+      @logger = Logger.new($stdout)
     end
 
     def trace_method(name)
@@ -133,8 +135,14 @@ module MethodTracer
     def output_call(call)
       time_str = format_time(call[:execution_time])
       status_str = call[:status] == :error ? "[ERROR]" : ""
-      puts "TRACE: #{call[:method_name]} #{status_str} took #{time_str}"
-      puts "       Error: #{call[:error].class}: #{call[:error].message}" if call[:error]
+      method_name = call[:method_name]
+      if call[:status] == :error
+        @logger.error(
+          "TRACE: #{method_name} #{status_str} took #{time_str} - Error: #{call[:error].class}: #{call[:error].message}"
+        )
+      else
+        @logger.info("TRACE: #{method_name} #{status_str} took #{time_str}")
+      end
       # Simpler: use `warn` for errors or use Logger with levels for production use.
     end
 
