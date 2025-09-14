@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
   spec.metadata["changelog_uri"] = "https://github.com/seunadex/method_tracer/blob/main/CHANGELOG.md"
+  spec.metadata["rubygems_mfa_required"] = "true"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -35,9 +36,6 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
-  spec.add_development_dependency "pry", "~> 0.14.0"
-  spec.add_development_dependency "rubocop-rake", "~> 0.7.1"
-  spec.add_development_dependency "rubocop-rspec", "~> 3.7.0"
   spec.add_dependency "logger"
 
   # For more information and examples about making a new gem, check out our

@@ -4,6 +4,10 @@ plugins:
 AllCops:
   TargetRubyVersion: 3.0
   SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - 'examples/**/*'
+    - 'vendor/**/*'
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

@@ -31,7 +31,7 @@ module MethodTracer
       method_name = name.to_sym
       visibility = method_visibility(method_name)
       return unless visibility
-      return unless mark_wrapped(method_name)
+      return unless mark_wrapped?(method_name)
 
       aliased = alias_for(method_name)
       @target_class.send(:alias_method, aliased, method_name) # Aliases original implementation to our private name.
@@ -91,7 +91,7 @@ module MethodTracer
     end
 
     # Marks a method as wrapped to avoid duplicates.
-    def mark_wrapped(method_name)
+    def mark_wrapped?(method_name)
       return false if @wrapped_methods.include?(method_name)
 
       @wrapped_methods << method_name
@@ -99,7 +99,7 @@ module MethodTracer
     end
 
     def alias_for(method_name)
-      "__method_tracer_original_#{method_name}__".to_sym
+      :"__method_tracer_original_#{method_name}__"
     end
 
     def build_wrapper(aliased, method_name, key, tracer)

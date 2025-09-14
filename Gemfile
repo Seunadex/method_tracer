@@ -9,4 +9,7 @@ gem "rake", "~> 13.0"
 
 gem "rspec", "~> 3.0"
 
+gem "pry", "~> 0.14.0"
 gem "rubocop", "~> 1.80.0"
+gem "rubocop-rake", "~> 0.7.1"
+gem "rubocop-rspec", "~> 3.7.0"
