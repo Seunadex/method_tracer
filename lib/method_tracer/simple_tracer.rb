@@ -137,13 +137,12 @@ module MethodTracer
       status_str = call[:status] == :error ? colorize("[ERROR]", :red) : colorize("[OK]", :green)
       method_name = colorize(call[:method_name], :cyan)
       if call[:status] == :error
-        @logger.error(
+        @logger.warn(
           "TRACE: #{method_name} #{status_str} took #{time_str} - Error: #{call[:error].class}: #{call[:error].message}"
         )
       else
         @logger.info("TRACE: #{method_name} #{status_str} took #{time_str}")
       end
-      # Simpler: use `warn` for errors or use Logger with levels for production use.
     end
 
     def format_time(seconds)
