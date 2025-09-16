@@ -133,9 +133,9 @@ module MethodTracer
     end
 
     def output_call(call)
-      time_str = format_time(call[:execution_time])
-      status_str = call[:status] == :error ? "[ERROR]" : ""
-      method_name = call[:method_name]
+      time_str = colorize(format_time(call[:execution_time]), :yellow)
+      status_str = call[:status] == :error ? colorize("[ERROR]", :red) : colorize("[OK]", :green)
+      method_name = colorize(call[:method_name], :cyan)
       if call[:status] == :error
         @logger.error(
           "TRACE: #{method_name} #{status_str} took #{time_str} - Error: #{call[:error].class}: #{call[:error].message}"
@@ -154,6 +154,20 @@ module MethodTracer
       else
         "#{(seconds * 1_000_000).round(0)}µs"
       end
+    end
+
+    def colorize(text, color)
+      colors = {
+        red: "31",
+        green: "32",
+        yellow: "33",
+        blue: "34",
+        magenta: "35",
+        cyan: "36",
+        white: "37",
+        reset: "0"
+      }
+      "\e[#{colors[color]}m#{text}\e[#{colors[:reset]}m"
     end
   end
 end
