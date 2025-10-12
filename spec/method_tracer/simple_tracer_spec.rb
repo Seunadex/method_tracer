@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "pry"
 
 RSpec.describe MethodTracer::SimpleTracer do
   let(:target_class) do
@@ -126,6 +127,7 @@ RSpec.describe MethodTracer::SimpleTracer do
 
       tracer = described_class.new(target_class, threshold: 0.0, auto_output: true)
       tracer.trace_method(:multiply)
+      allow(tracer).to receive(:colorize) { |text, _color| text }
 
       allow(tracer).to receive(:monotonic_time).and_return(1.0, 1.005)
 
@@ -134,7 +136,9 @@ RSpec.describe MethodTracer::SimpleTracer do
       log = out.string
       expect(log).to include("TRACE:")
       expect(log).to include("#{target_class}#multiply")
-      expect(log).to match(/took \d+\.\dms|took \d+\.\ds|took \d+µs/)
+      expect(log).to match(
+        /\AI, \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+ #\d+\]  INFO -- : TRACE: #{Regexp.escape("#{target_class}#multiply")} \[OK\] took 5\.0ms\n\z/ # rubocop:disable Layout/LineLength
+      )
     end
   end
 end
