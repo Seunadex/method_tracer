@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     method_tracer (0.1.1)
-      logger
+      logger (~> 1.7.0)
 
 GEM
   remote: https://rubygems.org/
