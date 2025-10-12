@@ -17,7 +17,7 @@ module MethodTracer
   #   tracer = MethodTracer::SimpleTracer.new(MyClass, threshold: 0.005)
   #   tracer.trace_method(:expensive_call)
   #   results = tracer.fetch_results
-  class SimpleTracer
+  class SimpleTracer # rubocop:disable Metrics/ClassLength
     def initialize(target_class, **options)
       @target_class = target_class
       @options = default_options.merge(options)
@@ -56,10 +56,9 @@ module MethodTracer
         timestamp: Time.now
       }
 
-      @lock.synchronize { @calls << call_details } # Thread safe append to shared results array.
+      @lock.synchronize { @calls << call_details } # Thread safe append to shared results arrray.
 
       output_call(call_details) if @options[:auto_output]
-      # Simpler: consider injecting a Logger so callers choose stdout, file, or discard.
     end
 
     def fetch_results
@@ -77,7 +76,7 @@ module MethodTracer
 
     def default_options
       {
-        threshold: 0.001, # 1ms
+        threshold: 0.001,
         auto_output: false
       }
     end
@@ -90,7 +89,7 @@ module MethodTracer
       nil
     end
 
-    # Marks a method as wrapped to avoid duplicates.
+    # Marks a method as wrapped to avoid duplicates
     def mark_wrapped?(method_name)
       return false if @wrapped_methods.include?(method_name)
 
@@ -108,7 +107,6 @@ module MethodTracer
           __send__(aliased, *args, **kwargs, &block)                   # Calls the original aliased implementation.
         end
       end
-      # Simpler: define the wrapper inline with `define_method` and a block, but extracting helps testability.
     end
 
     def wrap_call(method_name, key)
