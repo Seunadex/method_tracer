@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TestClass
-  include MethodTracer
+  include RubyMethodTracer
 
   def greet(name)
     "Hello, #{name}!"
@@ -12,9 +12,9 @@ class TestClass
   end
 end
 
-RSpec.describe MethodTracer do
+RSpec.describe RubyMethodTracer do
   it "has a version number" do
-    expect(MethodTracer::VERSION).not_to be_nil
+    expect(RubyMethodTracer::VERSION).not_to be_nil
   end
 
   it "traces a simple block and outputs JSON" do

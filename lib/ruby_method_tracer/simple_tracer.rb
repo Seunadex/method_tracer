@@ -3,7 +3,7 @@
 require "set"
 require "logger"
 
-module MethodTracer
+module RubyMethodTracer
   # SimpleTracer wraps instance methods on a target class and records
   # execution metrics for each invocation. It measures wall-clock duration,
   # captures success or error status, stores results in-memory, and can
@@ -14,7 +14,7 @@ module MethodTracer
   # - :auto_output (Boolean): When true, prints each call summary; defaults to false.
   #
   # Usage:
-  #   tracer = MethodTracer::SimpleTracer.new(MyClass, threshold: 0.005)
+  #   tracer = RubyMethodTracer::SimpleTracer.new(MyClass, threshold: 0.005)
   #   tracer.trace_method(:expensive_call)
   #   results = tracer.fetch_results
   class SimpleTracer # rubocop:disable Metrics/ClassLength
@@ -37,7 +37,7 @@ module MethodTracer
       @target_class.send(:alias_method, aliased, method_name) # Aliases original implementation to our private name.
 
       tracer = self
-      key = :__method_tracer_in_trace # local key to avoid recursive tracing.
+      key = :__ruby_method_tracer_in_trace # local key to avoid recursive tracing.
 
       # Defines a new method with the original name that delegates to our wrapper.
       @target_class.define_method(method_name, &build_wrapper(aliased, method_name, key, tracer))
@@ -98,7 +98,7 @@ module MethodTracer
     end
 
     def alias_for(method_name)
-      :"__method_tracer_original_#{method_name}__"
+      :"__ruby_method_tracer_original_#{method_name}__"
     end
 
     def build_wrapper(aliased, method_name, key, tracer)

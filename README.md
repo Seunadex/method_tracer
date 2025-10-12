@@ -1,8 +1,8 @@
-[![Ruby](https://github.com/Seunadex/method_tracer/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Seunadex/method_tracer/actions/workflows/main.yml)
+[![Ruby](https://github.com/Seunadex/ruby_method_tracer/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Seunadex/ruby_method_tracer/actions/workflows/main.yml)
 
-# MethodTracer
+# RubyMethodTracer
 
-MethodTracer is a lightweight Ruby mixin for targeted method tracing. It wraps instance methods, measures wall-clock runtime, flags errors, and can stream results to your logger without pulling in a full APM agent. Use it to surface slow paths in production or gather quick instrumentation while debugging.
+RubyMethodTracer is a lightweight Ruby mixin for targeted method tracing. It wraps instance methods, measures wall-clock runtime, flags errors, and can stream results to your logger without pulling in a full APM agent. Use it to surface slow paths in production or gather quick instrumentation while debugging.
 
 ## Highlights
 - Wrap only the methods you care about; public, protected, and private methods are supported.
@@ -18,7 +18,7 @@ Add it to your Gemfile directly from GitHub:
 
 ```ruby
 # Gemfile
-gem "method_tracer", github: "Seunadex/method_tracer"
+gem "ruby_method_tracer", github: "Seunadex/ruby_method_tracer"
 ```
 
 Then install:
@@ -30,20 +30,20 @@ bundle install
 For local development or experimentation:
 
 ```bash
-git clone https://github.com/Seunadex/method_tracer.git
-cd method_tracer
+git clone https://github.com/Seunadex/ruby_method_tracer.git
+cd ruby_method_tracer
 bundle exec rake install
 ```
 
 ## Usage
 
-Include `MethodTracer` in any class whose instance methods you want to observe. Register the target methods with optional settings.
+### Example 1
+Include `RubyMethodTracer` in any class whose instance methods you want to observe. Register the target methods with optional settings.
 
 ```ruby
-require "method_tracer"
 
 class Worker
-  include MethodTracer
+  include RubyMethodTracer
 
   def perform(user_id)
     expensive_call(user_id)
@@ -70,7 +70,7 @@ TRACE: Worker#perform [OK] took 6.3ms
 To inspect trace results programmatically, manage the tracer yourself:
 
 ```ruby
-tracer = MethodTracer::SimpleTracer.new(Worker, threshold: 0.002)
+tracer = RubyMethodTracer::SimpleTracer.new(Worker, threshold: 0.002)
 tracer.trace_method(:perform)
 
 Worker.new.perform(42)
@@ -85,6 +85,21 @@ pp tracer.fetch_results
 #    }
 ```
 
+### Example 2
+
+```ruby
+class OrderProcessor
+  include RubyMethodTracer
+
+  def process_order(order)
+    # ... perform work ...
+  end
+
+  trace_methods :process_order, auto_output: true
+end
+```
+
+
 ### Options
 
 - `threshold` (Float, default `0.001`): minimum duration (in seconds) to record.
@@ -94,11 +109,11 @@ pp tracer.fetch_results
 
 After checking out the repo, run `bin/setup` to install dependencies. Then run `rake spec` to execute the test suite. You can also run `bin/console` for an interactive prompt.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version in `lib/method_tracer/version.rb`, and then run `bundle exec rake release`.
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version in `lib/ruby_method_tracer/version.rb`, and then run `bundle exec rake release`.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/Seunadex/method_tracer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/Seunadex/method_tracer/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/Seunadex/ruby_method_tracer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/Seunadex/ruby_method_tracer/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -106,4 +121,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the MethodTracer project's codebases, issue trackers, chat rooms, and mailing lists is expected to follow the [code of conduct](https://github.com/Seunadex/method_tracer/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the RubyMethodTracer project's codebases, issue trackers, chat rooms, and mailing lists is expected to follow the [code of conduct](https://github.com/Seunadex/ruby_method_tracer/blob/main/CODE_OF_CONDUCT.md).

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    method_tracer (0.1.1)
+    ruby_method_tracer (0.1.1)
       logger (~> 1.7.0)
 
 GEM
@@ -70,7 +70,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  method_tracer!
+  ruby_method_tracer!
   pry (~> 0.14.0)
   rake (~> 13.0)
   rspec (~> 3.0)

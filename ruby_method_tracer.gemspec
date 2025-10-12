@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-require_relative "lib/method_tracer/version"
+require_relative "lib/ruby_method_tracer/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "method_tracer"
-  spec.version = MethodTracer::VERSION
+  spec.name = "ruby_method_tracer"
+  spec.version = RubyMethodTracer::VERSION
   spec.authors = ["Seun Adekunle"]
   spec.email = ["adekunleseun001@gmail.com"]
 
   spec.summary = "Lightweight method tracing for Ruby applications"
   spec.description = "A developer-friendly gem for tracing method calls, execution times, with minimal overhead."
-  spec.homepage = "https://github.com/seunadex/method_tracer"
+  spec.homepage = "https://github.com/seunadex/ruby_method_tracer"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
-  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["homepage_uri"] = "https://github.com/Seunadex/ruby_method_tracer/blob/main/README.md"
   spec.metadata["source_code_uri"] = spec.homepage
-  spec.metadata["changelog_uri"] = "https://github.com/seunadex/method_tracer/blob/main/CHANGELOG.md"
+  spec.metadata["changelog_uri"] = "https://github.com/seunadex/ruby_method_tracer/blob/main/CHANGELOG.md"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   # Specify which files should be added to the gem when it is released.

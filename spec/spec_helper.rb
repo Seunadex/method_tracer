@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "method_tracer"
+require "ruby_method_tracer"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

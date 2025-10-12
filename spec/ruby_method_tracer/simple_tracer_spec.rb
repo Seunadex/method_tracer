@@ -3,7 +3,7 @@
 require "spec_helper"
 require "pry"
 
-RSpec.describe MethodTracer::SimpleTracer do
+RSpec.describe RubyMethodTracer::SimpleTracer do
   let(:target_class) do
     Class.new do
       def multiply(arg)
